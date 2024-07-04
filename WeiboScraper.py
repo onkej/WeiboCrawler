@@ -1,5 +1,6 @@
-# ChatGPT feedback
-# Date: 2024-07-01
+# -*- coding: utf-8 -*-
+# Author: Ji An
+# Updated on 2024-07-04
 
 import os
 import re
@@ -11,7 +12,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from urllib.parse import urlencode, urljoin, quote, unquote
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-import time as systime
+# import time as systime
 
 
 global domain, output_folder, keyword, start_date, end_date 
