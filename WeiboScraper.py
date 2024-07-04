@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Author: Ji An
+# Author: Ji An (https://github.com/an-kei/SinaWeiboScraper)
+# Credit: Xuzhou Yin (For original repository, see https://github.com/Yhinner/SinaWeiboScraper) 
 # Updated on 2024-07-04
 
 import os
@@ -15,9 +16,10 @@ from zoneinfo import ZoneInfo
 # import time as systime
 
 
-global domain, output_folder, keyword, start_date, end_date 
+global domain, output_dir
 domain   = "https://s.weibo.com"
-output_folder = "./result"
+output_dir = "./result"
+
 
 def create_session(firefox_profile_path):
     """Create a requests session with cookies from a Firefox profile."""
@@ -36,6 +38,7 @@ def create_session(firefox_profile_path):
     }
     session.cookies.update(cookies)
     driver.quit()
+
     return session
 
 
@@ -206,7 +209,7 @@ def process_search_results(session, keyword, start_date, end_date):
 
 
 
-def posts_to_csv(posts, output_fpath, keyword):
+def posts_to_csv(posts, output_fpath):
     """Write the extracted posts found for one single keyword between start_date and end_date to a CSV file."""
     
     with open(output_fpath, 'w', newline='', encoding='utf-8') as csvfile:
@@ -222,28 +225,25 @@ def posts_to_csv(posts, output_fpath, keyword):
 
 
 
-def WeiboSearchByKeyword(query_file, firefox_profile_path):
+def WeiboKeywordSearch(query_file, firefox_profile_path):
     """Main function to scrape Weibo search results by keywords."""
     
     session = create_session(firefox_profile_path)
-    # os.makedirs('./result', exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
 
     with open(query_file, 'r', encoding='utf-8') as queries:
         reader = csv.reader(queries)
         for query in reader:
             keyword, start_date, end_date = query
-            # process_search_results(session, keyword, start_date, end_date)
-            # systime.sleep(5)
-    
             output_csv = f"{keyword}_{start_date}_{end_date}.csv"
-            output_fpath = os.path.join(output_folder, output_csv)
+            output_fpath = os.path.join(output_dir, output_csv)
             all_posts = process_search_results(session, keyword, start_date, end_date)
-            posts_to_csv(all_posts, output_fpath, keyword)
+            posts_to_csv(all_posts, output_fpath)
 
 
 
-if __name__ == '__WeiboSearchByKeyword__':
+if __name__ == '__main__':
     query = "query.csv"
     profile_path = "/Users/ko/Library/Application Support/Firefox/Profiles/pejmtqsl.default-release-1714475519242"
-    WeiboSearchByKeyword(query, profile_path)
+    WeiboKeywordSearch(query, profile_path)
 
