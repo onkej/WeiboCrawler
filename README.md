@@ -2,7 +2,7 @@
 This is an updated and extended version of the Weibo Scraper developed by [Xuzhou Yin](https://github.com/Yhinner).
 
 ## Credit 
-Xuzhou Yin (see [this repo](https://github.com/Yhinner/SinaWeiboScraper) for original work.
+Xuzhou Yin (see [this repo](https://github.com/Yhinner/SinaWeiboScraper) for original version).
 
 ## How to Download
 Open terminal, and navigate to the directory where you want to store the program, then type ```git clone address``` to download the program
