@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Author: Ji An (https://github.com/an-kei/SinaWeiboScraper)
 # Credit: Xuzhou Yin (For original repository, see https://github.com/Yhinner/SinaWeiboScraper) 
-# Updated on 2024-07-04
+# Updated on 2024-07-06
 
 import os
 import re
