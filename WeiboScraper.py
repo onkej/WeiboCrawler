@@ -16,7 +16,8 @@ from zoneinfo import ZoneInfo
 # import time as systime
 
 
-global domain, output_dir
+query = "query.csv"
+profile_path = "/Users/ko/Library/Application Support/Firefox/Profiles/pejmtqsl.default-release-1714475519242"
 domain   = "https://s.weibo.com"
 output_dir = "./result"
 
@@ -243,7 +244,5 @@ def WeiboKeywordSearch(query_file, firefox_profile_path):
 
 
 if __name__ == '__main__':
-    query = "query.csv"
-    profile_path = "/Users/ko/Library/Application Support/Firefox/Profiles/pejmtqsl.default-release-1714475519242"
     WeiboKeywordSearch(query, profile_path)
 
