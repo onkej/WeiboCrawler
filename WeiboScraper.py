@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+
 # Author: Ji An (https://github.com/an-kei/SinaWeiboScraper)
 # Credit: Xuzhou Yin (For original repository, see https://github.com/Yhinner/SinaWeiboScraper) 
 # Updated on 2024-07-06
+
 
 import os
 import re
@@ -13,13 +16,11 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from urllib.parse import urlencode, urljoin, quote, unquote
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
+import argparse
 # import time as systime
 
-
-query = "query.csv"
-profile_path = "/Users/ko/Library/Application Support/Firefox/Profiles/pejmtqsl.default-release-1714475519242"
+# Homepage of Weibo search
 domain   = "https://s.weibo.com"
-output_dir = "./result"
 
 
 def create_session(firefox_profile_path):
@@ -87,7 +88,6 @@ def fetch_result_pages(session, keyword, start_date, end_date):
     
 
 
-
 def parse_post_time(time_str):
     """Parse the local post time (UTC+8) string and return it in 'YYYY-MM-DD HH:MM' format."""
 
@@ -139,7 +139,6 @@ def parse_post_time(time_str):
         return time_str
     
     return post_time.strftime('%Y-%m-%d %H:%M')
-
 
 
 
@@ -203,7 +202,6 @@ def process_search_results(session, keyword, start_date, end_date):
         all_posts.extend(posts)
         print(f"Extracted {len(posts)} post(s) for search result page {i+1}.")
         
-
     print(f'Processing finished. Successfully extracted {len(all_posts)} posts in total for keyword {keyword} between {start_date} and {end_date}')
 
     return all_posts
@@ -226,10 +224,10 @@ def posts_to_csv(posts, output_fpath):
 
 
 
-def WeiboKeywordSearch(query_file, firefox_profile_path):
+def WeiboKeywordSearch(query_file, firefox_profile_path, output_dir):
     """Main function to scrape Weibo search results by keywords."""
     
-    session = create_session(firefox_profile_path)
+    session = create_session(firefox_profile_path,)
     os.makedirs(output_dir, exist_ok=True)
 
     with open(query_file, 'r', encoding='utf-8') as queries:
@@ -244,5 +242,31 @@ def WeiboKeywordSearch(query_file, firefox_profile_path):
 
 
 if __name__ == '__main__':
-    WeiboKeywordSearch(query, profile_path)
-
+    parser = argparse.ArgumentParser(
+        description='Scrape Weibo search results by keywords'
+    )
+    parser.add_argument(
+        'query', 
+        type=str,
+        help='The CSV filename containing the keywords and date range to search for',
+    )
+    parser.add_argument(
+        '-p','--profile_path', 
+        type=str,
+        required=True,
+        help='The directory to the Firefox profile containing the cookies for the Weibo session', 
+        # default="/Users/ko/Library/Application Support/Firefox/Profiles/pejmtqsl.default-release-1714475519242"
+    )
+    parser.add_argument(
+        '-o','--output_dir', 
+        type=str, 
+        required=False,
+        help='The directory to save the extracted posts', 
+        default="./result"
+    )
+    args = parser.parse_args()
+    WeiboKeywordSearch(
+        args.query, 
+        args.profile_path, 
+        args.output_dir
+    )
