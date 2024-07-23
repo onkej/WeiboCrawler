@@ -248,7 +248,7 @@ if __name__ == '__main__':
     parser.add_argument(
         'query', 
         type=str,
-        help='The CSV filename containing the keywords and date range to search for',
+        help='The directory to your query file containing keywords and date range used to search for',
     )
     parser.add_argument(
         '-p','--profile_path', 
