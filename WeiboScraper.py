@@ -227,7 +227,7 @@ def posts_to_csv(posts, output_fpath):
 def WeiboKeywordSearch(query_file, firefox_profile_path, output_dir):
     """Main function to scrape Weibo search results by keywords."""
     
-    session = create_session(firefox_profile_path,)
+    session = create_session(firefox_profile_path)
     os.makedirs(output_dir, exist_ok=True)
 
     with open(query_file, 'r', encoding='utf-8') as queries:
@@ -243,30 +243,39 @@ def WeiboKeywordSearch(query_file, firefox_profile_path, output_dir):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Scrape Weibo search results by keywords'
+        prog='WeiboScraper',
+        formatter_class=argparse.RawTextHelpFormatter,
+        description='''
+----------------------------------------------------------------------
+This program helps obtain Weibo posts based on keyword search queries. 
+It uses a Firefox profile to access Weibo search results and scrape 
+the corresponding posts that will then be saved in csv files.
+----------------------------------------------------------------------
+''',
+        epilog="e.g. python3 WeiboScraper.py './queries/query.csv' '/path/to/my/Firefox/profile'"
     )
     parser.add_argument(
-        'query', 
+        'query',
         type=str,
-        help='The directory to your query file containing keywords and date range used to search for',
+        help='path to your query file',
     )
     parser.add_argument(
-        '-p','--profile_path', 
+        'profile', 
         type=str,
-        required=True,
-        help='The directory to the Firefox profile containing the cookies for the Weibo session', 
-        # default="/Users/ko/Library/Application Support/Firefox/Profiles/pejmtqsl.default-release-1714475519242"
+        help='path to your Firefox profile',
     )
     parser.add_argument(
-        '-o','--output_dir', 
+        '-o',
+        dest='output',
         type=str, 
         required=False,
-        help='The directory to save the extracted posts', 
-        default="./result"
+        default='result',
+        help="output folder name (default: %(default)s)",
     )
     args = parser.parse_args()
     WeiboKeywordSearch(
         args.query, 
-        args.profile_path, 
-        args.output_dir
+        args.profile, 
+        args.output
     )
+
