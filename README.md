@@ -1,41 +1,41 @@
-# A Weibo Scraper by Keyword Searching
-This is an updated and extended version of the Weibo Scraper developed by [Xuzhou Yin](https://github.com/Yhinner).
+# A Tool for Weibo Scrapping by Keyword Search
+This is an extended version of the Weibo Scraper developed by [Xuzhou Yin]([https://github.com/Yhinner](https://github.com/Yhinner/SinaWeiboScraper)).
 
-## Credit 
-Xuzhou Yin (see [this repo](https://github.com/Yhinner/SinaWeiboScraper) for original version).
+[toc]
 
-## How to Download
-Open terminal, and navigate to the directory where you want to store the program, then type ```git clone address``` to download the program
 
-## Dependences
-1. Python 2.7 or above
-2. Firefox browser (Other browsers may be supported in future)
-3. selenium. Type ```pip install selenium```
-4. time. Type ```pip install time```
-5. bs4. Type ```pip install bs4```
-6. urllib. Type ```pip install urllib```
-7. datetime. Type ```pip install datetime```
-8. unicodecsv. Type ```pip install unicodecsv```
+## Dependencies
+- Python 3 (3.12 may be better)
+- Firefox browser (up-to-date)
+- Packages: cf. ``` requirements.txt ``` --> to be installed through Terminal using ``` pip3 install pkg1 pkg2 pk3``` after installing Python 3
+- Weibo account: a Chinese phone number is not necessary, instead, it's become a must to use your local phone number to sign up on Weibo.
 
-## How to Use
 
-### Before running the program
-Sina Weibo limits the permission of search feature that only users has signed in is able to use advanced search(such as search with specific time period). So please register for a sina Weibo account and sign in through Firefox browser(So Firefox automatically signs in next time). Then find the path of the Firefox profile (Refer to [Where is Firefox profile stored](https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data)). and replace the path in line 49 in ```scraper.py```.
+## What We Need as Input
+- **Query**: ``` .csv ``` file for keyword and date range settings. For each search attempt, Weibo returns at most 50 result pages, each showing no more than 10 posts. It's worth noting that for some real-time hot topics, it's common that you end up getting 50 pages within a few hours, which means a day-based strategy would not do that well. Hopefully, the hour-based feature will be tested later ... or, if possible, feel free to fork and explore it yourself. 🙌
+- **Firefox profile**: to find your Firefox default profile path, perhaps the easiest way is by typing ``` about:profiles ``` in the Firefox search bar. Press ```Enter``` and there will be at least one table where you can find the ``` Root Directory ``` for your ``` Default Profile ```. (See more at [Profiles - Where Firefox stores your bookmarks, passwords and other user data](https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data))
 
-### Query
-```query.txt``` file is for storing all the queries. Please add queries in the form of ```keyword;eventDate;startDate;endDate;pageofResult```, one query per line. Sina Weibo does not support "Scroll to bottom to view more" feature in search. Instead, it separates the query results into pages. And Sina limits the page of results to 50. So for each query, only 50 pages of the results can be accessed by users. And each page contains 20 posts. Therefore, for each search there are maximum 1000 posts can be obtained. **However, it might be the case that there are less than 1000 posts from the query. So please check the maximum number of pages that contain all results of the query**. 
+**IMPORTANT**: Remember to **sign in and save your username and password on Firefox** so that the Weibo Search homepage can be automatically loaded under your account when running the program. 
 
-### Run the program
-Run the program by typing ```python scraper.py```
 
-### What happens during execution
-Firefox browser will be executed, navigated to search page with keyword autimatically.
+## In Terminal
+Go to the folder where you store the query and the Python script:
 
-### Output
-Results will be in ```output``` folder in csv format. Each query generates one csv file. Excel has problem displaying Chinese characters. So viewing through other text editor is better(If you are using Mac, you can use Numbers to open the csv files).
+``` cd /path/to/the/project ```
 
-### How to developer
-For now this program only supports query with keyword for my own purpose. everyone is free to explore new features. There is one thing needs to be noted that it does not use Sina Weibo API since Weibo limits the amount of data to query if API is used. It basically uses broswer cookie to login, url address to do search. Please submit a pull request if you are read to contribute.
+Run the program: 
 
-### License
-This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details
+``` python3 WeiboScraper.py './queries/query.csv' '/path/to/Firefox/profile' ```
+
+For help:
+
+``` python3 WeiboScraper.py -h ```
+
+## Output
+The extracted data will be stored in ```result``` folder by default. Each query (i.e. each line of ```query.csv```) generates one CSV file. MacBook's Numbers and Google Sheets are good tools to view this file type.
+
+## Shortcomings
+Currently, the program only supports day-based keyword searches, and for each search, the posts are sorted by time from newest to oldest, starting from 11 p.m. by default. Thus sometimes you set a wide range but end up with some dense 480 posts published on the nearest day  ... and at night! 😂 In this case, suppose you need more data, the only possible tiny improvement is to narrow the date range (e.g. 1 day per query) and add multiple queries below the initial one, with the same keyword and different consecutive single days.
+
+## License
+This project is licensed under the MIT License.
