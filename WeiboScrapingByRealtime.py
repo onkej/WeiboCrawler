@@ -17,7 +17,8 @@ from urllib.parse import urlencode, urljoin, quote, unquote
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import argparse
-# import time as systime
+
+
 
 # Homepage of Weibo search
 domain   = "https://s.weibo.com"
@@ -32,7 +33,6 @@ def create_session(firefox_profile_path):
     driver = webdriver.Firefox(options=options)
 
     driver.get(domain)
-    # systime.sleep(5)
     session = requests.Session()
     cookies = {
         cookie['name']: cookie['value']
@@ -45,22 +45,21 @@ def create_session(firefox_profile_path):
 
 
 
-def fetch_result_pages(session, keyword, start_date, end_date):
+def fetch_result_pages(session, keyword):
     """For each keyword, fetch search result pages and (ideally) return a list of links to all possible result pages."""
     
-    path   = "/weibo?"
+    path   = "/realtime?"
     params = urlencode(
         {
             'q': keyword,
-            'scope': 'ori',
-            'suball': 1,
-            'timescope': f'custom:{start_date}:{end_date}'
+            'rd': 'realtime',
+            'tw': 'realtime',
         }
     )
 
-    url = urljoin(domain, path + params)
+    url = urljoin(domain, path + params).replace(' ', '+')
     response  = session.get(url)
-    print(f"Accessing main result page: {response.url} ...")
+    print(f"Accessing REALTIME main page: {response.url} ...")
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -68,23 +67,23 @@ def fetch_result_pages(session, keyword, start_date, end_date):
 
         if mpage_section: # if there are multiple pages of search results
             pages_suffix = [
-                unquote(li.a['href'].replace('×', '&times')) 
+                unquote(li.a['href']) 
                 for li in mpage_section.find_all('li')
             ]
             pages = [urljoin(domain, quote(suffix, safe='&:/=?')) for suffix in pages_suffix]
-            print(f"Found {len(pages)} search result pages.")
+            print(f"Found {len(pages)} REALTIME pages.")
 
         elif soup.find('div', class_="content"): # if there are search results but only 1 page
             pages = [url]
-            print(f"Found 1 search result page.")
+            print(f"Found 1 REALTIME page.")
 
         else:   # if no search results found
-            pages = f"No search results found for {keyword} between {start_date} and {end_date}."
+            pages = f"No REALTIME results found for {keyword}."
 
         return pages
     
     else:
-        raise Exception(f'Failed to fetch search results for {keyword} between {start_date} and {end_date}: {response.status_code} - {response.reason}')
+        raise Exception(f'Failed to fetch REALTIME results for {keyword}: {response.status_code} - {response.reason}')
     
 
 
@@ -181,15 +180,13 @@ def parse_post_card(card: BeautifulSoup) -> dict:
 
 
 
-def process_search_results(session, keyword, start_date, end_date):
-    """Process search results for a single keyword between start_date and end_date, and write the extracted posts to a CSV file."""
+def process_search_results(session, keyword):
+    """Process REALTIME results for a single keyword, write the extracted posts to a CSV file."""
 
-    pages = fetch_result_pages(session, keyword, start_date, end_date)
+    pages = fetch_result_pages(session, keyword)
     all_posts = []
     for i, page in enumerate(pages):
-        # systime.sleep(5)
         response = session.get(page)
-        # systime.sleep(5)
         print(f'Processing page {i+1}: {response.url} ...')
                
         soup  = BeautifulSoup(response.text, 'html.parser')
@@ -200,16 +197,16 @@ def process_search_results(session, keyword, start_date, end_date):
             post['keyword'] = keyword
 
         all_posts.extend(posts)
-        print(f"Extracted {len(posts)} post(s) for search result page {i+1}.")
+        print(f"Extracted {len(posts)} post(s) for REALTIME page {i+1}.")
         
-    print(f'Processing finished. Successfully extracted {len(all_posts)} posts in total for keyword {keyword} between {start_date} and {end_date}')
+    print(f'Processing finished. Successfully extracted {len(all_posts)} REALTIME posts for keyword {keyword}')
 
     return all_posts
 
 
 
 def posts_to_csv(posts, output_fpath):
-    """Write the extracted posts found for one single keyword between start_date and end_date to a CSV file."""
+    """Write the extracted posts found for one single keyword to a CSV file."""
     
     with open(output_fpath, 'w', newline='', encoding='utf-8') as csvfile:
         fieldnames = [
@@ -224,8 +221,8 @@ def posts_to_csv(posts, output_fpath):
 
 
 
-def WeiboKeywordSearch(query_file, firefox_profile_path, output_dir):
-    """Main function to scrape Weibo search results by keywords."""
+def WeiboRealtime(query_file, firefox_profile_path, output_dir):
+    """Main function to scrape Weibo REALTIME posts by keywords."""
     
     session = create_session(firefox_profile_path)
     os.makedirs(output_dir, exist_ok=True)
@@ -233,26 +230,27 @@ def WeiboKeywordSearch(query_file, firefox_profile_path, output_dir):
     with open(query_file, 'r', encoding='utf-8') as queries:
         reader = csv.reader(queries)
         for query in reader:
-            keyword, start_date, end_date = query
-            output_csv = f"{keyword}_{start_date}_{end_date}.csv"
-            output_fpath = os.path.join(output_dir, output_csv)
-            all_posts = process_search_results(session, keyword, start_date, end_date)
-            posts_to_csv(all_posts, output_fpath)
+            if query:
+                keyword = query[0]
+                output_csv = f"{keyword}_rt3.csv"
+                output_fpath = os.path.join(output_dir, output_csv)
+                all_posts = process_search_results(session, keyword)
+                posts_to_csv(all_posts, output_fpath)
 
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        prog='WeiboScraper',
+        prog='WeiboScrapingByRealtime',
         formatter_class=argparse.RawTextHelpFormatter,
         description='''
-----------------------------------------------------------------------
-This program helps obtain Weibo posts based on keyword search queries. 
-It uses a Firefox profile to access Weibo search results and scrape 
-the corresponding posts that will then be saved in csv files.
-----------------------------------------------------------------------
+--------------------------------------------------------------------
+This program helps obtain REALTIME Weibo posts based on keyword. It 
+uses a Firefox profile to access Weibo search results and scrape the
+corresponding posts that will then be saved in csv files.
+--------------------------------------------------------------------
 ''',
-        epilog="e.g. python3 WeiboScraper.py './queries/query.csv' '/path/to/my/Firefox/profile'"
+        epilog="e.g. python3 WeiboScrapingByRealtime.py './by_realtime/keyword.csv' '/path/to/my/Firefox/profile'"
     )
     parser.add_argument(
         'query',
@@ -269,11 +267,11 @@ the corresponding posts that will then be saved in csv files.
         dest='output',
         type=str, 
         required=False,
-        default='result',
+        default='realtime_result',
         help="output folder name (default: %(default)s)",
     )
     args = parser.parse_args()
-    WeiboKeywordSearch(
+    WeiboRealtime(
         args.query, 
         args.profile, 
         args.output
