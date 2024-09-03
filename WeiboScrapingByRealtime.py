@@ -250,7 +250,7 @@ uses a Firefox profile to access Weibo search results and scrape the
 corresponding posts that will then be saved in csv files.
 --------------------------------------------------------------------
 ''',
-        epilog="e.g. python3 WeiboScrapingByRealtime.py './by_realtime/keyword.csv' '/path/to/my/Firefox/profile'"
+        epilog="e.g. python3 WeiboScrapingByRealtime.py './by_realtime_query/YourQuery.csv' '/path/to/my/Firefox/profile'"
     )
     parser.add_argument(
         'query',
@@ -267,7 +267,7 @@ corresponding posts that will then be saved in csv files.
         dest='output',
         type=str, 
         required=False,
-        default='realtime_result',
+        default='by_realtime_result',
         help="output folder name (default: %(default)s)",
     )
     args = parser.parse_args()

@@ -241,7 +241,7 @@ def main(query_file, firefox_profile_path, output_dir):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        prog='WeiboScraper',
+        prog='WeiboScrapingByDate',
         formatter_class=argparse.RawTextHelpFormatter,
         description='''
 ----------------------------------------------------------------------
@@ -250,7 +250,7 @@ It uses a Firefox profile to access Weibo search results and scrape
 the corresponding posts that will then be saved in csv files.
 ----------------------------------------------------------------------
 ''',
-        # epilog="e.g. python3 WeiboScraping.py './by_date/query.csv' '/path/to/my/Firefox/profile'"
+        epilog="e.g. python3 WeiboScrapingByDate.py './by_date_query/YourQuery.csv' '/path/to/my/Firefox/profile'"
     )
     parser.add_argument(
         'query',
