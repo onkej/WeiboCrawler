@@ -1,3 +1,10 @@
+# temporary ignore the following folders
+date_result/
+by_date_query/
+by_date_result/
+by_realtime_query/
+by_realtime_result/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
