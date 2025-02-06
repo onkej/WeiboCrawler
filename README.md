@@ -1,13 +1,12 @@
 # A Tool for Weibo Scrapping by Keyword Search
 This is an extended version of the Weibo Scraper developed by [Xuzhou Yin](https://github.com/Yhinner/SinaWeiboScraper).
 
-
+<!---
 ## Dependencies
 - Python 3 (3.12 may be better)
 - Firefox browser (up-to-date)
-- Packages: cf. ``` requirements.txt ``` --> to be installed through Terminal using ```pip3 install pkg1 pkg2 pk3``` command after installing Python 3
+- Packages: cf. ``` requirements.txt ``` => to be installed through Terminal using ```pip3 install pkg1 pkg2 pk3``` command after installing Python 3
 - Weibo account: a Chinese phone number is not necessary, instead, it's become a must to use your local phone number to sign up.
-
 
 ## What We Need as Input
 - **Query**: ``` .csv ``` file for keyword and date range settings. For each search attempt, Weibo returns at most 50 result pages, each showing no more than 10 posts. It's worth noting that for some extremely hot topics, it's predictable that you end up getting 50 pages of posts published within a few hours only, which means a day-based strategy would not do the job well enough. Hopefully, the hour-based feature will be tested later ... or if possible, feel free to fork and explore it yourself. 🙌
@@ -31,3 +30,5 @@ Currently, the program only supports day-based keyword searches, and for each se
 
 ## License
 This project is licensed under the MIT License.
+
+-->
