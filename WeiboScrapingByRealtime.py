@@ -232,7 +232,7 @@ def WeiboRealtime(query_file, firefox_profile_path, output_dir):
         for query in reader:
             if query:
                 keyword = query[0]
-                output_csv = f"{keyword}_rt3.csv"
+                output_csv = f"rt_{keyword}.csv"
                 output_fpath = os.path.join(output_dir, output_csv)
                 all_posts = process_search_results(session, keyword)
                 posts_to_csv(all_posts, output_fpath)

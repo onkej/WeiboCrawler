@@ -1,9 +1,6 @@
 # tempo
-date_result/
-by_date_query/
-by_date_result/
-by_realtime_query/
-by_realtime_result/
+*.csv
+*.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
